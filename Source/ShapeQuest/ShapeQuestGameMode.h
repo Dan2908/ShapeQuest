@@ -13,6 +13,19 @@ class AShapeQuestGameMode : public AGameModeBase
 
 public:
 	AShapeQuestGameMode();
+
+	virtual void BeginPlay() override;
+
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void StartGame() {}
+
+private:
+
+	class AShapeQuestController* PlayerController;
+
+	class AShapeQuestCharacter* MainPlayer;
+
+
 };
 
 
