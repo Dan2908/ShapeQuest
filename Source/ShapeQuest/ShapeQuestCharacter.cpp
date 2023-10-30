@@ -5,11 +5,13 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
+#include "Grabber.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,6 +52,9 @@ AShapeQuestCharacter::AShapeQuestCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	Grabber = CreateDefaultSubobject<UGrabber>(TEXT("Grabber"));
+	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
 }
 
 void AShapeQuestCharacter::BeginPlay()
@@ -88,6 +93,9 @@ void AShapeQuestCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 		//Inventory
 		EnhancedInputComponent->BindAction(OpenInventoryAction, ETriggerEvent::Triggered, this, &AShapeQuestCharacter::OpenInventory);
 
+		//Grab
+		EnhancedInputComponent->BindAction(GrabAction, ETriggerEvent::Triggered, this, &AShapeQuestCharacter::Grab);
+	
 	}
 
 }
@@ -133,11 +141,17 @@ void AShapeQuestCharacter::OpenInventory(const FInputActionValue& Value)
 	InventoryActionTriggered();
 }
 
-void AShapeQuestCharacter::PickUp(const FInputActionValue& Value)
+void AShapeQuestCharacter::Grab(const FInputActionValue& Value)
 {
-
+	if (Grabber->IsGrabbing())
+	{
+		Grabber->LetGo();
+	}
+	else
+	{
+		Grabber->PickUp();
+	}
 }
-
 
 
 

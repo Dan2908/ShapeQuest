@@ -20,6 +20,10 @@ class AShapeQuestCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	/* Grabber */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UGrabber* Grabber;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -41,9 +45,16 @@ class AShapeQuestCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* OpenInventoryAction;
 
+	/** Open Inventory Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* GrabAction;
+
+	class UPhysicsHandleComponent* PhysicsHandle;
+
 public:
 	AShapeQuestCharacter();
-	
+
+	inline UPhysicsHandleComponent* GetPhysicsHandle() const { return PhysicsHandle; }
 
 protected:
 
@@ -56,8 +67,8 @@ protected:
 	/** Called for looking input */
 	void OpenInventory(const FInputActionValue& Value);
 
-	/** Called for looking input */
-	void PickUp(const FInputActionValue& Value);
+	/** Called for Grab input */
+	void Grab(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
